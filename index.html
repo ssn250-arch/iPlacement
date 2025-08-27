@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem iPlacement</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Sistem iPlacement</h1>
+    <p>Portal Carian Syarikat Latihan Industri ADTEC Sandakan</p>
+    <button onclick="startSearch()">Mula Carian</button>
+  </header>
+
+  <main>
+    <section id="search-section">
+      <h2>Carian Syarikat</h2>
+      <label>Negeri: <input type="text" id="filterNegeri"></label>
+      <label>Daerah: <input type="text" id="filterDaerah"></label>
+      <label>Jenis: <input type="text" id="filterJenis"></label>
+      <button onclick="filterCompanies()">Cari</button>
+    </section>
+
+    <section id="company-list">
+      <!-- Senarai syarikat akan dimasukkan oleh JS -->
+    </section>
+
+    <section id="documents">
+      <h2>Dokumen Rujukan LI</h2>
+      <ul id="doc-list"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 ADTEC Sandakan</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
