@@ -1,7 +1,6 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
   background: #f4f6f9;
 }
 
@@ -12,13 +11,9 @@ header {
   color: white;
 }
 
-header h1 {
-  margin: 0;
-}
-
 button {
   padding: 8px 15px;
-  margin-top: 10px;
+  margin: 5px;
   cursor: pointer;
   background: #007bff;
   border: none;
@@ -30,32 +25,14 @@ button:hover {
   background: #0056a3;
 }
 
-main {
-  padding: 20px;
-}
-
 #search-section {
-  margin-bottom: 20px;
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-#company-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 15px;
+  padding: 20px;
 }
 
 .company-card {
   background: white;
   padding: 15px;
+  margin: 10px 0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.company-card h3 {
-  margin: 0;
-  color: #0056a3;
 }
