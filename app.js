@@ -1,4 +1,4 @@
-// Data demo syarikat
+// Data Syarikat
 const companies = [
   {
     nama: "Synergy Tech Solutions",
@@ -18,62 +18,60 @@ const companies = [
   }
 ];
 
-// Data dokumen
+// Data Dokumen
 const documents = [
   { nama: "Borang Lawatan & Penilaian", url: "docs/lawatan.pdf" },
   { nama: "Borang Pemarkahan", url: "docs/markah.pdf" },
   { nama: "Contoh Buku Log", url: "docs/log.pdf" }
 ];
 
-function startSearch() {
+// Scroll ke carian
+function scrollToSearch() {
   document.getElementById("search-section").scrollIntoView({ behavior: "smooth" });
 }
 
-// Papar syarikat
+// Papar senarai syarikat
 function renderCompanies(list) {
-  const container = document.getElementById("company-list");
+  const container = document.getElementById("companyList");
   container.innerHTML = "";
   list.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "company-card";
-    div.innerHTML = `
-      <h3>${c.nama}</h3>
-      <p><b>Alamat:</b> ${c.alamat}</p>
-      <p><b>Jenis:</b> ${c.jenis}</p>
-      <p><b>Telefon:</b> ${c.telefon}</p>
-      <p><b>Email:</b> ${c.emel}</p>
-      <a href="${c.maps}" target="_blank">📍 Lokasi</a>
+    container.innerHTML += `
+      <div class="company-card">
+        <h3>${c.nama}</h3>
+        <p><b>Alamat:</b> ${c.alamat}</p>
+        <p><b>Jenis:</b> ${c.jenis}</p>
+        <p><b>Telefon:</b> ${c.telefon}</p>
+        <p><b>Email:</b> ${c.emel}</p>
+        <a href="${c.maps}" target="_blank">📍 Lokasi</a>
+      </div>
     `;
-    container.appendChild(div);
   });
 }
 
-// Papar dokumen
-function renderDocuments() {
-  const list = document.getElementById("doc-list");
-  documents.forEach(d => {
-    const li = document.createElement("li");
-    li.innerHTML = `<a href="${d.url}" target="_blank">${d.nama}</a>`;
-    list.appendChild(li);
-  });
-}
-
-// Filter carian
+// Filter syarikat
 function filterCompanies() {
   const negeri = document.getElementById("filterNegeri").value.toLowerCase();
   const daerah = document.getElementById("filterDaerah").value.toLowerCase();
   const jenis = document.getElementById("filterJenis").value.toLowerCase();
 
-  const filtered = companies.filter(c =>
+  const result = companies.filter(c =>
     c.alamat.toLowerCase().includes(negeri) &&
     c.alamat.toLowerCase().includes(daerah) &&
     c.jenis.toLowerCase().includes(jenis)
   );
 
-  renderCompanies(filtered);
+  renderCompanies(result);
 }
 
-// Auto load
+// Papar dokumen
+function renderDocuments() {
+  const docList = document.getElementById("docList");
+  documents.forEach(d => {
+    docList.innerHTML += `<li><a href="${d.url}" target="_blank">${d.nama}</a></li>`;
+  });
+}
+
+// On load
 window.onload = () => {
   renderCompanies(companies);
   renderDocuments();
