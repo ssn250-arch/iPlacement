@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/iplacement/static/css/main.c4f58d67.css",
+    "main.js": "/iplacement/static/js/main.20ba6b67.js",
+    "static/js/453.00b1442a.chunk.js": "/iplacement/static/js/453.00b1442a.chunk.js",
+    "index.html": "/iplacement/index.html",
+    "main.c4f58d67.css.map": "/iplacement/static/css/main.c4f58d67.css.map",
+    "main.20ba6b67.js.map": "/iplacement/static/js/main.20ba6b67.js.map",
+    "453.00b1442a.chunk.js.map": "/iplacement/static/js/453.00b1442a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c4f58d67.css",
+    "static/js/main.20ba6b67.js"
+  ]
+}
