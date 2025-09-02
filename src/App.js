@@ -184,9 +184,9 @@ const MainApp = () => {
   const [docs, setDocs] = useState(() => {
     const savedDocs = localStorage.getItem('docs');
     return savedDocs ? JSON.parse(savedDocs) : [
-      { id: 1, nama: 'Borang Lawatan Penyeliaan & Penilaian (BK-T11-03)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' },
-      { id: 2, nama: 'Borang Pemarkahan LI (BK-T11-04)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' },
-      { id: 3, nama: 'Buku Log (Contoh)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+      { id: 1, nama: 'Borang Lawatan Penyeliaan & Penilaian (BK-T11-03)', url: 'https://drive.google.com/file/d/1ejoV4WBVzVV9MqRqLxI8hRZmwwzAGnOh/view?usp=sharing' },
+      { id: 2, nama: 'Borang Pemarkahan LI (BK-T11-04)', url: 'https://drive.google.com/file/d/1nFsNY2kwyyCNuQX_ebfan94ZaXavPesP/view?usp=sharing' },
+      { id: 3, nama: 'Buku Log (Contoh)', url: 'https://drive.google.com/file/d/1itMNuh_dTQ8HrbRn7HoEs_zyrH2UEgPL/view?usp=sharing' }
     ];
   });
   const [isAddingDoc, setIsAddingDoc] = useState(false);
