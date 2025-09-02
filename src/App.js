@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, MapPin, Phone, Mail, Briefcase, Plus, ChevronLeft, ChevronRight, XCircle, LayoutGrid, List, User, LogOut, Edit, Trash, Search, FileText, Book, Upload } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
 
 // Data statik untuk dropdown
 const negeri = [
@@ -26,6 +27,10 @@ const daerah = {
     'Semua',
     'Kota Kinabalu',
     'Sandakan',
+    'Kota Marudu',
+    'Kota Belud',
+    'Kota Kinabatangan',
+    'Tongod',
     'Tawau',
     'Lahad Datu',
     'Keningau',
@@ -72,32 +77,83 @@ const jenisPerusahaan = [
 
 // Senarai syarikat tambahan untuk demonstrasi pagination
 const initialCompanies = [
-  { bil: 1, nama: 'Synergy Tech Solutions', alamat: 'Lot 23, Jalan Tuaran, Kota Kinabalu', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Rangkaian & Infrastruktur', tel: '088-1234567', emel: 'info@synergytech.my', lokasi: 'https://maps.app.goo.gl/abcdefg12345' },
-  { bil: 2, nama: 'Digital Frontier Sdn Bhd', alamat: 'Jalan Labuk, Taman Indah Jaya, Sandakan', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Keselamatan Siber', tel: '089-7654321', emel: 'career@digitalfrontier.com', lokasi: 'https://maps.app.goo.gl/hijklmn67890' },
-  { bil: 3, nama: 'Innovate Solutions', alamat: 'Taman Perindustrian Sandakan, Jalan Airport', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Perisian & Aplikasi', tel: '089-8765432', emel: '', lokasi: 'https://maps.app.goo.gl/opqrst01234' },
-  { bil: 4, nama: 'Cyberlink Networks', alamat: 'Jalan Gaya, 88000 Kota Kinabalu', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Telekomunikasi', tel: '088-2345678', emel: 'hr@cyberlink.net', lokasi: 'https://maps.app.goo.gl/uvwxyza56789' },
-  { bil: 5, nama: 'Smart Automation Lab', alamat: 'Lot 10, Jalan Sulaman, Kota Kinabalu', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'IoT & Automasi', tel: '088-3456789', emel: 'contact@smartlab.com.my', lokasi: 'https://maps.app.goo.gl/bcdefgh01234' },
-  { bil: 6, nama: 'Future Data Services', alamat: 'Jalan Airport, Tawau', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Pusat Data', tel: '089-4567890', emel: 'info@futuredatats.com', lokasi: 'https://maps.app.goo.gl/ijklmno56789' },
-  { bil: 7, nama: 'NextGen Infotech', alamat: 'Lot 77, Jalan Tun Razak, Keningau', negeri: 'Sabah', daerah: 'Keningau', jenis: 'Teknologi Maklumat', tel: '087-1234567', emel: 'info@nextgen.com', lokasi: 'https://maps.app.goo.gl/mnopqr012345' },
-  { bil: 8, nama: 'Cloudy Solutions', alamat: 'Jalan Semporna, Semporna', negeri: 'Sabah', daerah: 'Semporna', jenis: 'Perkhidmatan IT', tel: '089-9876543', emel: 'support@cloudy.net', lokasi: 'https://maps.app.goo.gl/stuvwxy67890' },
-  { bil: 9, nama: 'Global Cybersec', alamat: 'Jalan Pesisir, Papar', negeri: 'Sabah', daerah: 'Papar', jenis: 'Keselamatan Siber', tel: '088-3334444', emel: 'contact@globalcybersec.com', lokasi: 'https://maps.app.goo.gl/zabcd567890' },
-  { bil: 10, nama: 'Rangkaian Dinamik', alamat: 'Jalan Peringkat, Ranau', negeri: 'Sabah', daerah: 'Ranau', jenis: 'Rangkaian & Infrastruktur', tel: '088-5556666', emel: 'sales@rangkaiandinamik.my', lokasi: 'https://maps.app.goo.gl/efghi012345' },
-  { bil: 11, nama: 'Telekom Maju', alamat: 'Jalan Labuan, Tawau', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Telekomunikasi', tel: '089-7778888', emel: 'enquiry@telekommaju.my', lokasi: 'https://maps.app.goo.gl/jklmn678901' },
-  { bil: 12, nama: 'Perisian Cekap', alamat: 'Taman Perdana, Lahad Datu', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Perisian & Aplikasi', tel: '089-1112222', emel: 'contact@perisiancekap.com', lokasi: 'https://maps.app.goo.gl/opqrs23456' },
-  { bil: 13, nama: 'IT Services Sabah', alamat: 'Lot 50, Jalan Sembulan, Kota Kinabalu', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Perkhidmatan IT', tel: '088-4445555', emel: 'support@itservicessabah.com', lokasi: 'https://maps.app.goo.gl/tuva5678901' },
-  { bil: 14, nama: 'Sistem Embedded Solutions', alamat: 'Lot 65, Jalan Tuaran, Tuaran', negeri: 'Sabah', daerah: 'Tuaran', jenis: 'Sistem Embedded', tel: '088-6667777', emel: 'info@embedded.my', lokasi: 'https://maps.app.goo.gl/wxyz012345' }
+  { bil: 1, nama: 'Wilmar Fertilizer Malaysia Sdn.Bhd', alamat: 'Lot 24,Km 4, Poic Phase 1 Jalan Kastam Baru 91180 Lahad Datu', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Lain-Lain', tel: '089-862828', emel: '', lokasi: 'https://maps.app.goo.gl/SjDax6muaBjcFj629' },
+  { bil: 2, nama: 'Pusat Kawalan Trafik Udara Kota Kinabalu', alamat: 'Pusat Kawalan Trafik Udara Kota Kinabalu 1 Jalan Kepayan, 88200 Kota Kinabalu, Sabah', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Lain-Lain', tel: '088-274101', emel: '', lokasi: 'https://maps.app.goo.gl/vVujw7YXDXTvfMnL6' },
+  { bil: 3, nama: 'Sime Darby Auto Connecxion Sdn Bhd', alamat: 'Sime Darby Auto Connecxion Sdn Bhd Tb2900, Km3, Jalan Apas, 91000 Tawau, Sabah', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Lain-Lain', tel: '089-775133', emel: '', lokasi: 'https://maps.app.goo.gl/Vv3HmGmF3HModvRc7' },
+  { bil: 4, nama: 'Sedafiat Sdn Bhd. Hospital Support Services', alamat: 'Sedafiat Sdn Bhd. Hospital Support Services D/A Hospital Semporna, P/S 80, 91307 Semporna.', negeri: 'Sabah', daerah: 'Semporna', jenis: 'Lain-Lain', tel: '011-32258454', emel: '', lokasi: 'https://maps.app.goo.gl/Xha1x4JEFcYQPzL6A' },
+  { bil: 5, nama: 'Sabah Net Sdn Bhd', alamat: 'Sabah Net Sdn Bhd 18 Ground Floor Likas Square Commercial Centre 1 Lorong Likas Squre Jalan Istiadat Likas 88400 Kota Kinabalu', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Pusat Data', tel: '088-231101', emel: '', lokasi: 'https://maps.app.goo.gl/AT2dFiFKeZi6q2Np6' },
+  { bil: 6, nama: 'Sabah Hotel Sandakan', alamat: 'Sabah Hotel Sandakan Jalan Utara, 90000 Sandakan, Sabah.', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '089-213299', emel: '', lokasi: 'https://maps.app.goo.gl/pg1ewNFUdBvmTgRB9' },
+  { bil: 7, nama: 'Lahad Datu Edible Oils Sdn.Bhd', alamat: 'Km2 Jalan Kastam Baru, 91100, Lahad Datu, Sabah.', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Lain-Lain', tel: '089-882222', emel: '', lokasi: 'https://maps.app.goo.gl/9DdNPb7E2fmv1LRHA' },
+  { bil: 8, nama: 'Jabatan Digital, Universiti Malaysia Sabah', alamat: 'Jabatan Teknologi Maklumat Dan Komunikasi Ums Universiti Malaysia Sabah Jalan Ums 88400 Kota Kinabalu,Sabah', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Rangkaian & Infrastruktur', tel: '088-320000', emel: '', lokasi: 'https://maps.app.goo.gl/ayDPjhvHTfNCLPia7' },
+  { bil: 9, nama: 'Jabatan Perkhidmatan Komputer Negeri (Cawangan Beaufort)', alamat: 'Jabatan Perkhidmatan Komputer Negeri, Cawangan Beaufort', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Perkhidmatan IT', tel: '087-222296', emel: '', lokasi: 'https://maps.app.goo.gl/yecVxLUCeBCFBPQq6' },
+  { bil: 10, nama: 'Jabatan Perkhidmatan Komputer Negeri (Cawangan Kota Marudu)', alamat: 'Cawangan Merudu Peti Surat 128 89108 Kota Marudu', negeri: 'Sabah', daerah: 'Kota Marudu', jenis: 'Perkhidmatan IT', tel: '088-662051', emel: '', lokasi: 'https://maps.app.goo.gl/iGXjmtydVDsf8sRz8' },
+  { bil: 11, nama: 'Fizrix System Sdn. Bhd', alamat: 'Fizrix System Sdn. Bhd. Lot 10-1, First Floor Blok B Plaza Kingfisher, Lorong Plaza Kingfisher 4, 88450 Kota Kinabalu, Sabah.', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Perisian & Aplikasi', tel: '016-8157272', emel: '', lokasi: 'https://maps.app.goo.gl/bdVNgX6PQznRxVmM7' },
+  { bil: 12, nama: 'Celcom Timur (Sabah) Sdn.Bhd', alamat: 'Lot 100, Block K, Lorong Plaza Permai 2, Sulaman- Coastal Highway, Alamesra, 88400 Kota Kinabalu', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Telekomunikasi', tel: '013-8842002', emel: '', lokasi: 'https://maps.app.goo.gl/cGQquXmr16zuPe7U6' },
+  { bil: 13, nama: 'Amtc System Sdn Bhd', alamat: 'Amtc System Sdn Bhd 3rd Floor, Lot 2-4-3e, Lorong Plaza Wawasan, Plaza Wawasan, 88000 Kota Kinabalu, Sabah.', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Rangkaian & Infrastruktur', tel: '088-230733', emel: '', lokasi: 'https://maps.app.goo.gl/Mq5k4uYecV5D9vuY7' },
+  { bil: 14, nama: 'Sabahmas Plantations Sdn. Bhd.', alamat: '5cg4+ Taman Mewah, Lahad Datu, Sabah.', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Lain-Lain', tel: '089-860100', emel: '', lokasi: 'https://maps.app.goo.gl/DQRAweBKyetzMqeD9' },
+  { bil: 15, nama: 'A-Tech It Services', alamat: 'Lot 3.69, Kompleks Karamunsing, Jalan Karamunsing, 88300 Kota Kinabalu, Sabah.', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Lain-Lain', tel: '088-254035', emel: '', lokasi: 'https://maps.app.goo.gl/rjmbqLRMdybtKTre7' },
+  { bil: 16, nama: 'Umw (East Malaysia) Sdn. Bhd.', alamat: 'Mile 5,5, Jalan Tuaran, Empat Bersaudari,88817 , Kota Kinabalu, Sabah.', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Lain-Lain', tel: '088-430007', emel: '', lokasi: 'https://maps.app.goo.gl/vyesPtkWcndoUCQB7' },
+  { bil: 17, nama: 'Exact Engineering Sdn. Bhd', alamat: 'Exact Engineering Sdn. Bhd Shoplot 46 Mile 2,5, Jalan Penampang, Taman Mesra, 88300 Kota Kinabalu, Sabah', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Lain-Lain', tel: '088-219719', emel: '', lokasi: 'https://maps.app.goo.gl/FP9Ee4bQxUcmC3t17' },
+  { bil: 18, nama: 'Ascii Computer House', alamat: 'Lot 11 Kb Plaza ,Grd And 1st Flr, Kota Belud Sabah', negeri: 'Sabah', daerah: 'Kota Belud', jenis: 'Perkhidmatan IT', tel: '088-972628', emel: '', lokasi: 'https://maps.app.goo.gl/LPK3p8JqE9mh6X4x5' },
+  { bil: 19, nama: 'Putra Dot Net', alamat: 'Putra Dot Net Tb 4534, Block G, Lot 59, Ground Floor, Ba Zhong, Jalan Tawau Lama, 91000, Tawau Sabah', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Perkhidmatan IT', tel: '089-777234', emel: '', lokasi: 'https://maps.app.goo.gl/TaRTemTAi9yGcYW47' },
+  { bil: 20, nama: 'Wilmar Plantations Sdn. Bhd.', alamat: 'Lot 1a, Km15, Locked Bag 34, Jalan Labuk, Sandakan, 90009 Sandakan, Sabah.', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '012-8011929', emel: '', lokasi: 'https://maps.app.goo.gl/aqhiis8KYSxsp4jL7' },
+  { bil: 21, nama: 'Agensi Penguatkuasa Maritim Malaysia', alamat: 'Agensi Penguatkuasa Maritim Malaysia Pejabat Zon Maritim, Peti Surat 3156 Jalan Buli Sim Sim 90000 Sandakan Sabah Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '089-229500', emel: '', lokasi: 'https://maps.app.goo.gl/efKwueCbmdBRfJX3A' },
+  { bil: 22, nama: 'Quantum It Sales And Services', alamat: 'Tb581, Gf, Tacoln Commercial Building, Jalan Haji Karim, 91000 Tawau, Sabah.', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Perkhidmatan IT', tel: '089-764633', emel: '', lokasi: 'https://maps.app.goo.gl/xsMEL8e5wvi4s7yP8' },
+  { bil: 23, nama: 'Tzone Computer Sales & Services Sdn Bhd', alamat: 'Floor,Wisma Jin Ho,Jalan St.Patrick,91000 Tawau,Sabah. Sabah', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Perkhidmatan IT', tel: '017-8986060', emel: '', lokasi: 'https://maps.app.goo.gl/oBRpspSjmJqPwD2L6' },
+  { bil: 24, nama: 'FGV Prodata System Sdn. Bhd', alamat: '4a&4b, Block F, Bandar Cenderawasih, Felda Sahabat 91150 Lahad Datu, Sabah Sabah', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Lain-Lain', tel: '03-27890909', emel: '', lokasi: 'https://maps.app.goo.gl/jfJvPvauNoo4wuwx8' },
+  { bil: 25, nama: 'Prima It Hub', alamat: '3.79, 3rd Floor, Block C, Kompleks Karamunsing, 88100 Kota Kinabalu, Sabah', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Perkhidmatan IT', tel: '018-3772118', emel: '', lokasi: 'https://maps.app.goo.gl/hduxgo7Y4VMHkXYL7' },
+  { bil: 26, nama: 'Malaysia Airport Sdn Bhd', alamat: 'Malaysia Airport Sdn Bhd Airport 90000 Sandakan Sabah Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '013-8839451', emel: '', lokasi: 'https://maps.app.goo.gl/QMCf7oepcxJPqHPb7' },
+  { bil: 27, nama: 'IJM Plantations Berhad', alamat: 'Ijm Plantations Berhad Wisma Ijm Plantations, Mile 6, Jalan Bandar Utama, Mile 6, Jalan Utara, 90000, Sandakan. Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '089-667721', emel: '', lokasi: 'https://maps.app.goo.gl/MDU3mjLNoUc2jFA8A' },
+  { bil: 28, nama: 'Digital Lctechnology', alamat: 'Digital Lctechnology Lot A8 Ground Floor Phase 2 , Putra Square Putatan 88200 Kota Kinabalu , Sabah', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Perkhidmatan IT', tel: '011-33081077', emel: '', lokasi: 'https://maps.app.goo.gl/ci45LKFh48bursx47' },
+  { bil: 29, nama: 'Jabatan Perkhidmatan Komputer Tawau', alamat: 'Jabatan Perkhidmatan Komputer Tawau Beg Berkunci No 33, Tingkat 4, Bangunan Mpt, 91009, Tawau Sabah Sabah', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Perkhidmatan IT', tel: '089-779073', emel: '', lokasi: 'https://maps.app.goo.gl/bxgocC7QrnisoUu97' },
+  { bil: 30, nama: 'Pejabat Tanah Daerah Beluran.', alamat: 'Pejabat Tanah Daerah Beluran. Peti Surat 127, 90107 Beluran Sabah Sabah', negeri: 'Sabah', daerah: 'Beluran', jenis: 'Lain-Lain', tel: '010-8032655', emel: '', lokasi: 'https://maps.app.goo.gl/tHNRtawDPprMak6D9' },
+  { bil: 31, nama: 'Ioi Edible Oils Sdn Bhd', alamat: 'Ioi Edible Oils Sdn Bhd 12km Sg Mowtas,Jalan Jaya Chip,Off Jalan Batu Sapi,90738 Sandakan Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '089-616733', emel: '', lokasi: 'https://maps.app.goo.gl/PAMYneUYhk7V5Gb16' },
+  { bil: 32, nama: 'Pejabat Daerah Tongod', alamat: 'Pejabat Daerah Tongod Pejabat Pos Mini Tongod,Peti Surat 01,89330 Tongod Sabah Malaysia Sabah', negeri: 'Sabah', daerah: 'Tongod', jenis: 'Lain-Lain', tel: '087-748499', emel: '', lokasi: 'https://maps.app.goo.gl/hnRwrD7TL1Pq4YoNA' },
+  { bil: 33, nama: 'Arfsan Computer Centre', alamat: 'Arfsan Computer Centre Lot 1 Blok B1,Tingkat 1 Bandar Labuk Jaya Batu 7,Sandakan Sabah Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '013-8797984', emel: '', lokasi: 'https://maps.app.goo.gl/kTzVSKFAW3QJz8ds5' },
+  { bil: 34, nama: 'Jabatan Kastam Diraja Malaysia (Zon Sabah)', alamat: 'Jabatan Kastam Diraja Malaysia (Zon Sabah) Wisma Kastam Diraja,Jalan Persekutuan Off Jalan Labuk,Batu 7, 90700 Sandakan Sabah Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '088-348100', emel: '', lokasi: 'https://maps.app.goo.gl/hct2okAo3bF1jqtz7' },
+  { bil: 35, nama: 'Pro It Services', alamat: 'Pro It Services Tb 53,Lot No F6,Taman Megah Jaya 9,Mile 4 91000 Tawau Sabah Sabah', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Perkhidmatan IT', tel: '019-3440424', emel: '', lokasi: 'https://maps.app.goo.gl/ejgtGLuwYcLxLwBGA' },
+  { bil: 36, nama: 'Multimedia & Training Centre (Mtc', alamat: 'Blok B, Lot 9, Tingkat 1 Kkmp Plaza, Lot 9, Lorong Emboh Ali, 89150 Kota Belud, Sabah.', negeri: 'Sabah', daerah: 'Kota Belud', jenis: 'Perkhidmatan IT', tel: '088-971557', emel: '', lokasi: 'https://maps.app.goo.gl/Gn3a54JzTpefD4h5A' },
+  { bil: 37, nama: 'Sabah Softwood Berhad', alamat: 'Sabah Softwood Berhad, Km 8, Jln Sin San, Pasir Putih P.O Box 60966, 91019 Tawau, Sabah', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Lain-Lain', tel: '089-769844', emel: '', lokasi: 'https://maps.app.goo.gl/eGAetqB8vGtJ8Mr48' },
+  { bil: 38, nama: 'Felda Prodata Systems Sdn. Bhd,', alamat: 'Felda Prodata Systems Sdn. Bhd, 4a&B, Blok F, Pusat Komersil Cenderawasih, Peti Surat 202, Pos Cenderawasih 91150 Lahad Datu, Sabah.', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Teknologi Maklumat', tel: '089-811106', emel: '', lokasi: 'https://maps.app.goo.gl/jfJvPvauNoo4wuwx8' },
+  { bil: 39, nama: 'Jabatan Akauntan Negara Malaysia', alamat: 'Jabatan Akauntan Negara Malaysia Cawangan Sandakan, Tingkat 2, Wisma Persekutuan, Beg Berkunci 6, 90509 Sandakan, Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Teknologi Maklumat', tel: '089-668384', emel: '', lokasi: 'https://maps.app.goo.gl/TqWx7Ntu23wG47oT6' },
+  { bil: 40, nama: 'Jabatan Tenaga Kerja (Cawangan Kota Kinabatangan)', alamat: 'Jabatan Tenaga Kerja Bangunan Sedco, Lot E5 & E6, Pekan Kota Kinabatangan, Sabah.', negeri: 'Sabah', daerah: 'Kota Kinabatangan', jenis: 'Teknologi Maklumat', tel: '089-561967', emel: '', lokasi: 'https://maps.app.goo.gl/gLHRgKEdZVuPcSbs8' },
+  { bil: 41, nama: 'Felda Wilayah Sahabat', alamat: 'Felda Wilayah Sahabat Peti Surat 88,91150 Cenderwasih Lahad Datu Sabah Sabah', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Teknologi Maklumat', tel: '089-811200', emel: '', lokasi: 'https://maps.app.goo.gl/P19jrVrH4SsQwXBu5' },
+  { bil: 42, nama: 'Pejabat Mara Daerah Kinabatangan', alamat: 'Pejabat Mara Daerah Kinabatangan, Lot 8 & 9, Tingkat Atas, Premis Perniagaan, Pusat R&R Kinabatangan, 90200 Kinabatangan, Sabah', negeri: 'Sabah', daerah: 'Kota Kinabatangan', jenis: 'Lain-Lain', tel: '089-551636', emel: '', lokasi: 'https://maps.app.goo.gl/LbZ3Jt1vZRCmZxbm6' },
+  { bil: 43, nama: 'Pejabat Pendidikan Daerah Lahad Datu', alamat: 'Pejabat Pendidikan Daerah Lahad Datu Aras Bawah, Bangunan Mdld, Pls 60288 91112 Lahad Datu Sabah', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Lain-Lain', tel: '089-884172', emel: '', lokasi: 'https://maps.app.goo.gl/uuSFkrFNARrbxP4u5' },
+  { bil: 44, nama: 'Perpustakaan Negeri Sabah Cawangan Kinabatangan', alamat: 'Perpustakaan Negeri Sabah Cawangan Kinabatangan Wdt 388, 90200 Kinabatangan Sabah', negeri: 'Sabah', daerah: 'Kota Kinabatangan', jenis: 'Lain-Lain', tel: '089-569677', emel: '', lokasi: 'https://maps.app.goo.gl/xLTVVS3vNVzTPQhx9' },
+  { bil: 45, nama: 'Multiplus Computing Sdn Bhd', alamat: 'Multiplus Computing Sdn Bhd Blok 19, Lot 1-2, Ground Floor, Mile 4, Bandar Indah 90000 Sandakan Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Rangkaian & Infrastruktur', tel: '089-278357', emel: '', lokasi: 'https://maps.app.goo.gl/Lsd5k9ENmf2UqJcj7' },
+  { bil: 46, nama: 'Pejabat Pendidikan Daerah Sandakan', alamat: 'Pejabat Pendidikan Daerah Sandakan Tingkat 5, Wisma Persekutuan, Beg Berkunci 02 90400 Sandakan Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '089-668500', emel: '', lokasi: 'https://maps.app.goo.gl/HhJjZps74ZQJUdTB9' },
+  { bil: 47, nama: 'Pertubuhan Peladang Kawasan Kalabakan', alamat: 'Pertubuhan Peladang Kawasan Kalabakan Kg. Merotai Besar, Batu 23, Jalan Merotai Kalabakan, Peti Surat 62101, 91000 Tawau, Sabah. Sabah', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Lain-Lain', tel: '089-901832', emel: '', lokasi: 'https://maps.app.goo.gl/NgQg8Uj2KNtmXrPS9' },
+  { bil: 48, nama: 'JPKN Wilayah Sandakan', alamat: 'JPKN Wilayah Sandakan Km10, Jalan Labuk, 90000 Sandakan. Sabah. Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '089-660411', emel: '', lokasi: 'https://maps.app.goo.gl/RHZS5AakjEQzH28J7' },
+  { bil: 49, nama: 'Majlis Daerah Tongod', alamat: 'Majlis Daerah Tongod Pejabat Pos Mini Tongod, Peti Surat 38, 89300 Tongod, Sabah. Sabah', negeri: 'Sabah', daerah: 'Tongod', jenis: 'Lain-Lain', tel: '087-748828', emel: '', lokasi: 'https://maps.app.goo.gl/62UUJoWM5DorKB8d8' },
+  { bil: 50, nama: 'CIDB Malaysia (Cawangan Sandakan)', alamat: 'CIDB Malaysia (Cawangan Sandakan) Bandar Labuk Jaya D, Batu 7, Jalan Labuk, 90000 Sandakan, Sabah. Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '03-40477145', emel: '', lokasi: 'https://maps.app.goo.gl/9rPTEQUga8EQXKPK9' },
+  { bil: 51, nama: 'Hap Seng Plantations (River Estates Sdn Bhd)', alamat: 'Hap Seng Plantations (River Estates Sdn Bhd) Locked Bag 5, 91109 Lahad Datu Sabah', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Lain-Lain', tel: '089-577182', emel: '', lokasi: 'https://maps.app.goo.gl/bJKraChuH5Ukz43P6' },
+  { bil: 52, nama: 'Ghost Commercial', alamat: 'Ghost Commercial Lot 1a & B Blok 20, Tingkat Bawah, Lebuh Tiga, 90000 Bandar Sandakan Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Lain-Lain', tel: '012-8659851', emel: '', lokasi: 'https://maps.app.goo.gl/gJUTAXVXVcQ6sKHh6' },
+  { bil: 53, nama: 'Digital World (Sandakan)', alamat: 'Ground Floor, Lot 59, Block I, Jalan Pasaraya, Bandar Pasaraya, 90000 Sandakan, Sabah.', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Rangkaian & Infrastruktur', tel: '089-215393', emel: '', lokasi: 'https://maps.app.goo.gl/Pv33mSprtU8mAAgw9' },
+  { bil: 54, nama: 'Digital World (Lahad Datu)', alamat: '28ch+M7, Bandar Lahad Datu, 91100 Lahad Datu, Sabah.', negeri: 'Sabah', daerah: 'Lahad Datu', jenis: 'Rangkaian & Infrastruktur', tel: '089-959209', emel: '', lokasi: 'https://maps.app.goo.gl/sGXSwmGyecAstEDr8' },
+  { bil: 55, nama: 'Digital World (Tawau)', alamat: 'Digital World Tb577, Block D, Ground Floor, Tacoin Commercial Complex, Jalan Haji Karim, 91000 Tawau Sabah', negeri: 'Sabah', daerah: 'Tawau', jenis: 'Rangkaian & Infrastruktur', tel: '089-749366', emel: '', lokasi: 'https://maps.app.goo.gl/pprToWigLbMsDQt77' },
+  { bil: 56, nama: 'Majlis Perbandaran Sandakan', alamat: 'Majlis Perbandaran Sandakan Peti Surat 221, 90702 Sandakan Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Teknologi Maklumat', tel: '089-224651', emel: '', lokasi: 'https://maps.app.goo.gl/tttKn1ss8hJ1Dqku7' },
+  { bil: 57, nama: 'Gentingmas Mall Sdn.Bhd.', alamat: 'Gentingmas Mall Office, Blok F-Tingkat 1, Lot 48, Jalan Airport, Bandar Perdana, 90000 Sandakan, Sabah. Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Teknologi Maklumat', tel: '017-8601899', emel: '', lokasi: 'https://maps.app.goo.gl/Xoh23MiY7EYdi5pi7' },
+  { bil: 58, nama: 'Sandakan Edible Oils Sdn Bhd', alamat: 'Sandakan Edible Oils Sdn Bhd Km 8, Jalan Batu Sapi, Karamunting, P.O. Box 2605, 90729 Sandakan, Sabah. Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Teknologi Maklumat', tel: '089-611011', emel: '', lokasi: 'https://maps.app.goo.gl/o4yHVMqzevtQLWRv6' },
+  { bil: 59, nama: 'Pusat Multimedia Corner', alamat: 'Pusat Multimedia Corner Lot 5, Block 22, Ground Floor, Bandar Indah, Mile 4, North Road, 90000 Sandakan, Sabah. Sabah', negeri: 'Sabah', daerah: 'Sandakan', jenis: 'Rangkaian & Infrastruktur', tel: '016-8267789', emel: '', lokasi: 'https://maps.app.goo.gl/cZX4BRb4Xnz6pvkK6' },
+  { bil: 60, nama: 'Budget Pc Sdn. Bhd.', alamat: 'Lot No 3.32, 3rd Floor, Kompleks Karamunsing, Jalan Tuaran, 88300 Kota Kinabalu, Sabah', negeri: 'Sabah', daerah: 'Kota Kinabalu', jenis: 'Teknologi Maklumat', tel: '088-254 633', emel: '', lokasi: 'https://maps.app.goo.gl/Wwz2faHMQYjmMvpq5' }
 ];
 
 // Komponen utama aplikasi pangkalan data
 const MainApp = () => {
-  const [companies, setCompanies] = useState(initialCompanies);
+  const [companies, setCompanies] = useState(() => {
+    const savedCompanies = localStorage.getItem('companies');
+    return savedCompanies ? JSON.parse(savedCompanies) : initialCompanies;
+  });
+
   const [filters, setFilters] = useState({
     negeri: 'Semua',
     daerah: 'Semua',
     jenis: 'Semua'
   });
-  const [filteredCompanies, setFilteredCompanies] = useState(initialCompanies);
-  
+
+  const [filteredCompanies, setFilteredCompanies] = useState(companies);
+
   const [isAdmin, setIsAdmin] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [username, setUsername] = useState('');
@@ -122,14 +178,17 @@ const MainApp = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const companiesPerPage = 9;
   const [selectedCompany, setSelectedCompany] = useState(null);
-  const [viewMode, setViewMode] = useState('grid'); 
+  const [viewMode, setViewMode] = useState('grid');
   const [showDocs, setShowDocs] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
-  const [docs, setDocs] = useState([
-    { id: 1, nama: 'Borang Lawatan Penyeliaan & Penilaian (BK-T11-03)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' },
-    { id: 2, nama: 'Borang Pemarkahan LI (BK-T11-04)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' },
-    { id: 3, nama: 'Buku Log (Contoh)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
-  ]);
+  const [docs, setDocs] = useState(() => {
+    const savedDocs = localStorage.getItem('docs');
+    return savedDocs ? JSON.parse(savedDocs) : [
+      { id: 1, nama: 'Borang Lawatan Penyeliaan & Penilaian (BK-T11-03)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' },
+      { id: 2, nama: 'Borang Pemarkahan LI (BK-T11-04)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' },
+      { id: 3, nama: 'Buku Log (Contoh)', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+    ];
+  });
   const [isAddingDoc, setIsAddingDoc] = useState(false);
   const [isEditingDoc, setIsEditingDoc] = useState(false);
   const [editDocId, setEditDocId] = useState(null);
@@ -165,6 +224,14 @@ const MainApp = () => {
     applyFilters();
   }, [filters, companies]);
 
+  useEffect(() => {
+    localStorage.setItem('companies', JSON.stringify(companies));
+  }, [companies]);
+
+  useEffect(() => {
+    localStorage.setItem('docs', JSON.stringify(docs));
+  }, [docs]);
+
   const indexOfLastCompany = currentPage * companiesPerPage;
   const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
   const currentCompanies = filteredCompanies.slice(indexOfFirstCompany, indexOfLastCompany);
@@ -183,11 +250,12 @@ const MainApp = () => {
   const handleAddCompany = (e) => {
     e.preventDefault();
     if (newCompany.nama && newCompany.negeri && newCompany.daerah && newCompany.jenis) {
-      setCompanies(prev => [...prev, { ...newCompany, bil: prev.length + 1 }]);
+      const newBil = companies.length > 0 ? Math.max(...companies.map(c => c.bil)) + 1 : 1;
+      setCompanies(prev => [...prev, { ...newCompany, bil: newBil }]);
       setIsAddingCompany(false);
       showMessage("Syarikat berjaya ditambah!");
       setNewCompany({
-        bil: companies.length + 2,
+        bil: newBil + 1,
         nama: '',
         alamat: '',
         negeri: '',
@@ -224,27 +292,23 @@ const MainApp = () => {
         showMessage("Sila isi semua maklumat yang diperlukan.");
     }
   };
-  
   const handleDeleteCompany = (bil) => {
     setCompanyToDelete(bil);
   };
-
   const confirmDeleteCompany = () => {
     setCompanies(prev => prev.filter(company => company.bil !== companyToDelete));
     showMessage("Syarikat berjaya dipadam!");
-    setCompanyToDelete(null); 
+    setCompanyToDelete(null);
   };
 
   const cancelDeleteCompany = () => {
     setCompanyToDelete(null);
   };
-
   const handleEditClick = (company) => {
     setIsEditingCompany(true);
     setEditCompanyId(company.bil);
     setNewCompany({ ...company });
   };
-  
   const handleLogin = (e) => {
     e.preventDefault();
     if (username === 'admin' && password === 'admin@12345') {
@@ -263,7 +327,6 @@ const MainApp = () => {
     setEditCompanyId(null);
     showMessage("Log keluar berjaya.");
   };
-
   const showMessage = (message) => {
     const messageBox = document.createElement('div');
     messageBox.className = 'fixed inset-0 flex items-center justify-center p-4 bg-gray-800 bg-opacity-75 z-50';
@@ -282,7 +345,8 @@ const MainApp = () => {
     e.preventDefault();
     if (newDoc.nama && newDoc.file) {
       const newDocId = docs.length > 0 ? Math.max(...docs.map(d => d.id)) + 1 : 1;
-      const newUrl = URL.createObjectURL(newDoc.file); // Menggunakan URL objek untuk demo
+      const newUrl = URL.createObjectURL(newDoc.file);
+      // Menggunakan URL objek untuk demo
       setDocs(prev => [...prev, { id: newDocId, nama: newDoc.nama, url: newUrl }]);
       setIsAddingDoc(false);
       setNewDoc({ id: newDocId + 1, nama: '', file: null, url: '' });
@@ -291,7 +355,6 @@ const MainApp = () => {
       showMessage("Sila isi semua maklumat dokumen.");
     }
   };
-
   const handleUpdateDoc = (e) => {
     e.preventDefault();
     if (newDoc.nama) {
@@ -304,11 +367,9 @@ const MainApp = () => {
         showMessage("Sila isi semua maklumat dokumen.");
     }
   };
-  
   const handleDeleteDoc = (id) => {
     setDocToDelete(id);
   };
-  
   const confirmDeleteDoc = () => {
     setDocs(prev => prev.filter(doc => doc.id !== docToDelete));
     showMessage("Dokumen berjaya dipadam!");
@@ -318,14 +379,11 @@ const MainApp = () => {
   const cancelDeleteDoc = () => {
     setDocToDelete(null);
   };
-
   const handleEditDocClick = (doc) => {
     setIsEditingDoc(true);
     setEditDocId(doc.id);
     setNewDoc({ id: doc.id, nama: doc.nama, file: null, url: doc.url });
   };
-
-
   return (
     <div className="font-sans antialiased bg-gray-100 min-h-screen flex flex-col items-center">
       <div className="container w-full max-w-4xl p-4 sm:p-8">
@@ -335,7 +393,7 @@ const MainApp = () => {
           </h1>
         </div>
         <p className="text-center text-gray-600 mb-8 sm:mb-12">
-          ADTEC JTM Kampus Sandakan
+           ADTEC JTM Kampus Sandakan
         </p>
 
         {/* Menu Pilihan */}
@@ -476,7 +534,7 @@ const MainApp = () => {
                   </div>
                   {isAdmin && (
                     <div className="flex space-x-2">
-                       <button
+                      <button
                         onClick={(e) => { e.stopPropagation(); handleEditDocClick(doc); }}
                         className="p-1 rounded-lg text-yellow-600 hover:bg-yellow-100 transition-colors"
                         title="Edit Dokumen"
@@ -686,7 +744,7 @@ const MainApp = () => {
                           </button>
                         </div>
                       ) : (
-                         <ChevronRight size={24} className="text-gray-400" />
+                        <ChevronRight size={24} className="text-gray-400" />
                       )}
                     </div>
                   ))
@@ -1044,11 +1102,9 @@ const MainApp = () => {
 // Gabungkan komponen utama dan landing page ke dalam satu komponen untuk tujuan demonstrasi.
 const App = () => {
     const [showMainApp, setShowMainApp] = useState(false);
-
     const handleStartSearch = () => {
         setShowMainApp(true);
     };
-
     if (showMainApp) {
         return <MainApp />;
     }
